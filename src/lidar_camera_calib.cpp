@@ -197,6 +197,8 @@ int main(int argc, char **argv) {
   nh.param<string>("common/pcd_file", pcd_file, "");
   nh.param<string>("common/result_file", result_file, "");
   std::cout << "pcd_file path:" << pcd_file << std::endl;
+  std::cout << "image_file path:" << image_file << std::endl;
+
   nh.param<vector<double>>("camera/camera_matrix", camera_matrix,
                            vector<double>());
   nh.param<vector<double>>("camera/dist_coeffs", dist_coeffs, vector<double>());
@@ -234,10 +236,16 @@ int main(int argc, char **argv) {
   T = calibra.init_translation_vector_;
   std::cout << "Initial rotation matrix:" << std::endl
             << calibra.init_rotation_matrix_ << std::endl;
+  std::cout << "0000" << std::endl;
   std::cout << "Initial translation:"
             << calibra.init_translation_vector_.transpose() << std::endl;
+  printf("----------size %d . \n" , calibra.raw_lidar_cloud_->points.size() );
+  std::cout << "222222220000" << std::endl;
+
   bool use_vpnp = true;
+  std::cout << "111111111111";
   Eigen::Vector3d euler = R.eulerAngles(2, 1, 0);
+  std::cout << "222";
   calib_params[0] = euler[0];
   calib_params[1] = euler[1];
   calib_params[2] = euler[2];
@@ -254,7 +262,7 @@ int main(int argc, char **argv) {
   calibra.init_rgb_cloud_pub_.publish(pub_cloud);
   cv::Mat init_img = calibra.getProjectionImg(calib_params);
   cv::imshow("Initial extrinsic", init_img);
-  cv::imwrite("/home/ycj/data/calib/init.png", init_img);
+  cv::imwrite("/home/liunao/calib/init.png", init_img);
   cv::waitKey(1000);
 
   if (use_rough_calib) {
@@ -379,19 +387,31 @@ int main(int argc, char **argv) {
             << std::endl;
   }
   outfile << 0 << "," << 0 << "," << 0 << "," << 1 << std::endl;
+
+  outfile <<  std::endl << "R :<ZYX> " << std::endl ;
+
+  Eigen::Vector3d R_euler = R.eulerAngles(2, 1, 0);
+
+  outfile << RAD2DEG(R_euler[0]) << "," << RAD2DEG(R_euler[1]) <<  ","
+          << RAD2DEG(R_euler[2]) 
+          << std::endl << std::endl;
+
   cv::Mat opt_img = calibra.getProjectionImg(calib_params);
   cv::imshow("Optimization result", opt_img);
   cv::imwrite("/home/ycj/data/calib/opt.png", opt_img);
   cv::waitKey(1000);
   Eigen::Matrix3d init_rotation;
-  init_rotation << 0, -1.0, 0, 0, 0, -1.0, 1, 0, 0;
+  init_rotation << 0, -1.0, 0.0, 
+                   0, 0, -1.0, 
+                   1, 0, 0;
   Eigen::Matrix3d adjust_rotation;
   adjust_rotation = init_rotation.inverse() * R;
+
   Eigen::Vector3d adjust_euler = adjust_rotation.eulerAngles(2, 1, 0);
-  // outfile << RAD2DEG(adjust_euler[0]) << "," << RAD2DEG(adjust_euler[1]) <<
-  // ","
-  //         << RAD2DEG(adjust_euler[2]) << "," << 0 << "," << 0 << "," << 0
-  //         << std::endl;
+  outfile << RAD2DEG(adjust_euler[0]) << "," << RAD2DEG(adjust_euler[1]) <<
+  ","
+          << RAD2DEG(adjust_euler[2]) 
+          << std::endl;
   while (ros::ok()) {
     sensor_msgs::PointCloud2 pub_cloud;
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr rgb_cloud(

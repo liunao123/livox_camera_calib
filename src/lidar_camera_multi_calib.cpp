@@ -208,8 +208,9 @@ int main(int argc, char **argv) {
   std::vector<Calibration> calibs;
   for (size_t i = 0; i < data_num; i++) {
     string image_file, pcd_file = "";
-    image_file = image_path + "/" + std::to_string(i) + ".bmp";
+    image_file = image_path + "/" + std::to_string(i) + ".jpg";
     pcd_file = pcd_path + "/" + std::to_string(i) + ".pcd";
+    ROS_WARN("loading %s . " , pcd_file.c_str());
     Calibration single_calib(image_file, pcd_file, calib_config_file);
     single_calib.fx_ = camera_matrix[0];
     single_calib.cx_ = camera_matrix[2];
@@ -242,6 +243,7 @@ int main(int argc, char **argv) {
   distor << calibs[0].k1_, calibs[0].k2_, calibs[0].p1_, calibs[0].p2_;
   R = calibs[0].init_rotation_matrix_;
   T = calibs[0].init_translation_vector_;
+  // T = Eigen::Vector3d( 0.0, 0.10 , 0.0 );
   std::cout << "Initial rotation matrix:" << std::endl
             << calibs[0].init_rotation_matrix_ << std::endl;
   std::cout << "Initial translation:"
@@ -267,13 +269,13 @@ int main(int argc, char **argv) {
   // Maximum match distance threshold: 15 pixels
   // If initial extrinsic lead to error over 15 pixels, the algorithm will not
   // work
-  int dis_threshold = 30;
+  int dis_threshold = 20;
   bool opt_flag = true;
 
   // Iteratively reducve the matching distance threshold
-  for (dis_threshold = 30; dis_threshold > 10; dis_threshold -= 1) {
+  for (dis_threshold = 20; dis_threshold > 10; dis_threshold -= 1) {
     // For each distance, do twice optimization
-    for (int cnt = 0; cnt < 2; cnt++) {
+    for (int cnt = 0; cnt < 5; cnt++) {
 
       std::vector<std::vector<VPnPData>> vpnp_list_vect;
       int vpnp_size = 0;
@@ -370,6 +372,9 @@ int main(int argc, char **argv) {
       Eigen::AngleAxisd(calib_params[1], Eigen::Vector3d::UnitY()) *
       Eigen::AngleAxisd(calib_params[2], Eigen::Vector3d::UnitX());
   std::ofstream outfile(result_path);
+  outfile <<  std::endl << " -------------------------------------data_num : "<< data_num << "    . ------------------------------------- " << std::endl;
+  outfile << " ---------------------------------------------start------------------------------------- " << std::endl;
+  
   for (int i = 0; i < 3; i++) {
     outfile << R(i, 0) << "," << R(i, 1) << "," << R(i, 2) << "," << T[i]
             << std::endl;
@@ -384,10 +389,38 @@ int main(int argc, char **argv) {
   adjust_rotation = init_rotation.inverse() * R;
   Eigen::Vector3d adjust_euler = adjust_rotation.eulerAngles(2, 1, 0);
 
-  // outfile << RAD2DEG(adjust_euler[0]) << "," << RAD2DEG(adjust_euler[1]) <<
-  // ","
-  //         << RAD2DEG(adjust_euler[2]) << "," << 0 << "," << 0 << "," << 0
-  //         << std::endl;
+  outfile <<  std::endl << "R_cl < directly use in fast_livo > :<ZYX> " << std::endl;
+  Eigen::Vector3d R_euler = R.eulerAngles(2, 1, 0);
+  outfile << RAD2DEG(R_euler[0]) << "," << RAD2DEG(R_euler[1]) <<
+  ","
+          << RAD2DEG(R_euler[2]) 
+          << std::endl << std::endl;
+
+  outfile << RAD2DEG(adjust_euler[0]) << "," << RAD2DEG(adjust_euler[1]) <<
+  ","
+          << RAD2DEG(adjust_euler[2]) 
+          << std::endl;
+
+
+  Eigen::Isometry3d T_mat = Eigen::Isometry3d::Identity();
+  T_mat.rotate(  R  );
+
+  Eigen::Vector3d trans_mat;
+  trans_mat << -1, 0, 0 ; // Horizon
+  T_mat.pretranslate( T );
+  cout << __FILE__ << ":" << __LINE__ << " R_lc < directly use in r3live > " << endl << endl
+       << T_mat.matrix().inverse() << endl
+       << endl << endl ;
+  outfile <<  std::endl << " R_lc < directly use in r3live > " << std::endl;
+
+  auto temp_mat = T_mat.matrix().inverse();
+  for (int i = 0; i < 3; i++)
+  {
+    outfile << temp_mat(i, 0) << "," << temp_mat(i, 1) << "," << temp_mat(i, 2) << "," << temp_mat(i, 3)
+            << std::endl;
+  }
+  outfile <<  std::endl << " ---------------------------------------------end------------------------------------- " << std::endl;
+
   while (ros::ok()) {
     sensor_msgs::PointCloud2 pub_cloud;
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr rgb_cloud(

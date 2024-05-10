@@ -14,6 +14,7 @@ string bag_file;
 string lidar_topic;
 string pcd_file;
 bool is_custom_msg;
+double limit_y;
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "lidarCamCalib");
@@ -22,6 +23,8 @@ int main(int argc, char **argv) {
   nh.param<string>("pcd_file", pcd_file, "");
   nh.param<string>("lidar_topic", lidar_topic, "/livox/lidar");
   nh.param<bool>("is_custom_msg", is_custom_msg, false);
+  nh.param<double>("limit_y", limit_y, 10.0);
+
   pcl::PointCloud<pcl::PointXYZI> output_cloud;
   std::fstream file_;
   file_.open(bag_file, ios::in);
@@ -51,7 +54,10 @@ int main(int argc, char **argv) {
         p.y = livox_cloud_msg.points[i].y;
         p.z = livox_cloud_msg.points[i].z;
         p.intensity = livox_cloud_msg.points[i].reflectivity;
-        output_cloud.points.push_back(p);
+        if( p.x > 1.0  and p.x < 15.0 and  std::fabs( p.y ) < limit_y )
+        {
+          output_cloud.points.push_back(p);
+        }
       }
     } else {
       sensor_msgs::PointCloud2 livox_cloud;
@@ -61,7 +67,10 @@ int main(int argc, char **argv) {
       pcl_conversions::toPCL(livox_cloud, pcl_pc);
       pcl::fromPCLPointCloud2(pcl_pc, cloud);
       for (uint i = 0; i < cloud.size(); ++i) {
-        output_cloud.points.push_back(cloud.points[i]);
+        if( cloud.points[i].x > 2  and cloud.points[i].x < 8 and  std::fabs( cloud.points[i].y ) < limit_y )
+        {
+          output_cloud.points.push_back(cloud.points[i]);
+        }
       }
     }
   }
