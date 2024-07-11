@@ -1,17 +1,81 @@
 # Data path. adjust them!
 common:
-    image_path:  "/home/ycj/data/calib/image/old"
-    pcd_path:  "/home/ycj/data/calib/pcd/old"
-    result_path:  "/home/ycj/data/calib/extrinsic.txt"
-    data_num: 3
+    image_path:   "/home/bag/outdoor_cabli_data/low/pcd_png"
+    pcd_path:     "/home/bag/outdoor_cabli_data/low/pcd_png"
+    result_path:  "/home/bag/outdoor_cabli_data/low/extrinsic_avia_hk_1.txt"
+    data_num: 8
 # Camera Parameters. Adjust them!
+# v1
+# camera:
+#     camera_matrix: [864, 0.0,  351,
+#                     0.0, 865,  256,
+#                     0.0, 0.0,  1.0 ]
+#     dist_coeffs: [0.3175,   -2.77,  7.22e-03, 4.136e-03,  3.1]
+
+# v1  for xn 
+# camera:
+#     camera_matrix: [866.411716 ,  0.000000 ,  344.855379 ,
+#                     0.000000 , 867.711416 , 248.662891 ,
+#                     0.000000 , 0.000000 , 1.000000]
+#     dist_coeffs: [-0.026447 , -0.029082 , -0.000322 , 0.000343 , 0.000000]
+
+# v1 2nd new lidar 
+# camera:
+#     camera_matrix: [434.4000 , 0.000 , 322.9 ,
+#                     0.000000 , 432.8 , 257.2 ,
+#                     0.000000 , 0.000 , 1.000000]
+#     dist_coeffs: [-0.049224333 , 0.068869667 , 0.001110333 , -0.000927667 ,  0]
+
+
+# v2
+# camera:
+#     camera_matrix: [430.885, 0.0,      324.299,
+#                     0.0,     431.067,  252.805,
+#                     0.0,     0.0,      1.0]
+#     dist_coeffs: [-0.058, 0.1031, -0.00066825, -0.04018816, -0.000887]
+
+# v2--liejian
+# camera:
+#     camera_matrix: [598.968585,   0.       , 370.781375,
+#                     0.     ,     599.338375, 276.530045,
+#                     0.     ,     0.       ,   1.   ]
+
+#     dist_coeffs: [-0.100568 ,  0.0933415 , 0.000033, -0.000593 , 0]
+
+
+# v2--hk
+# camera:
+#     camera_matrix: [625.42654,   0.    , 306.26709,
+#                     0.     , 625.61129 ,  251.60909,
+#                     0.     ,   0.      ,   1.     ]
+#     dist_coeffs: [-0.101191, 0.144913, 0.001419, -0.000249, 0.000000]
+
+
+# v2_2nd -- hk
+# camera:
+    # camera_matrix: [620.493585,   0.    , 314.065225,
+    #                 0.     , 621.346845 , 256.85171,
+    #                 0.     ,   0.      ,   1     ]
+    # dist_coeffs: [-0.097161,0.148119,-0.0017345,0.000604,0]
+
+
+# v1_ avia hk
 camera:
-    camera_matrix: [1704.1857 , 0.0,      886.5115,
-                    0.0,     1719.5228,  467.9244,
-                    0.0,     0.0,      1.0     ]
-    dist_coeffs: [-0.0963, 0.0708, 0.0011, -0.0017, 0.000000]
+    camera_matrix: [625.0441867 ,   0.    , 302.6309133,
+                    0.     , 625.80582 ,    246.7821367,
+                    0.     ,   0.      ,   1     ]
+    dist_coeffs: [-0.114957667 , 0.211279 , -0.000874 , -0.001598667 , 0]
+
+# 2k
+# camera:
+    # camera_matrix: [2484.175314 ,   0.    ,   1222.834817,
+    #                 0.0     , 2484.52529  ,   987.1929620,
+    #                 0.0     ,   0.00      ,   1     ]
+    # dist_coeffs: [-0.098983 , 0.16952025 , -0.00051425 , -0.00025925 , 0.0 ]
+
 
 # Calibration Parameters.!
 calib:
-    calib_config_file: "/home/ycj/catkin_ws/src/livox_camera_calib/config/config_outdoor.yaml"
-    use_rough_calib: true # set true if your initial_extrinsic is bad
+    # calib_config_file: "/home/liunao/calib/src/livox_camera_calib/config/config_indoor.yaml"
+    calib_config_file: "/home/liunao/calib/src/livox_camera_calib/config/config_outdoor.yaml"
+    use_rough_calib: false # set true if your initial_extrinsic is bad

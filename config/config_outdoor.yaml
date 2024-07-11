@@ -12,10 +12,16 @@ ExtrinsicMat: !!opencv-matrix
   rows: 4
   cols: 4
   dt: d
-  data: [0.0,   -1.0,   0.0,    0.0,
-         0.0,  0.0,  -1.0,    0.0,
-         1.0,   0.0,    0.0,    0.0,
-         0.0,   0.0,    0.0,    1.0]
+  # data: [0.0,   -1.0,   0.0,    0.0,
+  #        0.0,  0.0,  -1.0,      0.0,
+  #        1.0,   0.0,    0.0,    0.0,
+  #        0.0,   0.0,    0.0,    1.0]
+
+  data: [ 0.02888100 , -0.9994270 , -0.0176385 , -0.00429101 ,
+          -0.0117679 ,  0.0173046 , -0.9997810 , -0.01947530 ,
+          0.99951400 ,  0.0290823 , -0.0112614 , -0.00845176 ,
+          0.0,   0.0,    0.0,    1.0]
+
 # Params for Canny Edge Extraction
 
 Canny.gray_threshold: 20
@@ -36,3 +42,4 @@ Edge.max_dis_threshold: 0.06
 # Params for color point clouds
 Color.dense: 1
 Color.intensity_threshold: 10
+

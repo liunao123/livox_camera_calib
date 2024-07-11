@@ -5,8 +5,17 @@
     name="bag_to_pcd"
     output="screen"
   />
-   <param name="bag_file" type="string" value="/home/ycj/data/calib/outdoor1.bag"/>
+
+   <param name="file_path" type="string"          value="/home/direct_l_v_calibrate_data_avia/cab_hall/ "/>
+   <param name="bag_num" type="int" value="11"/>
+
+   <!-- <param name="bag_file" type="string"          value="/home/bag/outdoor_cabli_data/2k/bag/5.bag"/>
+   <param name="pcd_file" type="string"      value="/home/bag/outdoor_cabli_data/2k/pcd_png/5.pcd"/> -->
+   <!-- <param name="lidar_topic" type="string" value="/livox/lidar"/> -->
+   <!-- <param name="is_custom_msg" type="bool" value="true"/> -->
+
+   <param name="is_custom_msg" type="bool" value="true"/>
    <param name="lidar_topic" type="string" value="/livox/lidar"/>
-   <param name="pcd_file" type="string" value="$(find livox_camera_calib)/result/0.pcd"/>
-   <param name="is_custom_msg" type="bool" value="false"/>
+   <param name="limit_y" type="double" value="50"/>
+
 </launch>

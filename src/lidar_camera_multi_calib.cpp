@@ -208,7 +208,7 @@ int main(int argc, char **argv) {
   std::vector<Calibration> calibs;
   for (size_t i = 0; i < data_num; i++) {
     string image_file, pcd_file = "";
-    image_file = image_path + "/" + std::to_string(i) + ".jpg";
+    image_file = image_path + "/" + std::to_string(i) + ".png";
     pcd_file = pcd_path + "/" + std::to_string(i) + ".pcd";
     ROS_WARN("loading %s . " , pcd_file.c_str());
     Calibration single_calib(image_file, pcd_file, calib_config_file);
@@ -391,22 +391,22 @@ int main(int argc, char **argv) {
 
   outfile <<  std::endl << "R_cl < directly use in fast_livo > :<ZYX> " << std::endl;
   Eigen::Vector3d R_euler = R.eulerAngles(2, 1, 0);
-  outfile << RAD2DEG(R_euler[0]) << "," << RAD2DEG(R_euler[1]) <<
+  outfile << RAD2DEG(R_euler[2]) << "," << RAD2DEG(R_euler[1]) <<
   ","
-          << RAD2DEG(R_euler[2]) 
+          << RAD2DEG(R_euler[0]) 
           << std::endl << std::endl;
 
-  outfile << RAD2DEG(adjust_euler[0]) << "," << RAD2DEG(adjust_euler[1]) <<
+  outfile << RAD2DEG(adjust_euler[2]) << "," << RAD2DEG(adjust_euler[1]) <<
   ","
-          << RAD2DEG(adjust_euler[2]) 
+          << RAD2DEG(adjust_euler[0]) 
           << std::endl;
 
 
   Eigen::Isometry3d T_mat = Eigen::Isometry3d::Identity();
   T_mat.rotate(  R  );
 
-  Eigen::Vector3d trans_mat;
-  trans_mat << -1, 0, 0 ; // Horizon
+  // Eigen::Vector3d trans_mat;
+  // trans_mat << -1, 0, 0 ; // Horizon
   T_mat.pretranslate( T );
   cout << __FILE__ << ":" << __LINE__ << " R_lc < directly use in r3live > " << endl << endl
        << T_mat.matrix().inverse() << endl

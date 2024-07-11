@@ -19,6 +19,20 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
 )
 
+# set(Ceres_DIR  "/root/Desktop/r2/ceres-solver-2.1.0")
+
+# set(Eigen3_DIR "/root/Desktop/cabli/eigen-3.3.4/build")
+# message(FATAL_ERROR "EIGEN: "${EIGEN3_INCLUDE_DIR}")
+
+# set(Eigen3_DIR "/home/liunao/r3/opencv-4.5.3/build")
+
+# set(OpenCV_DIR "/home/liunao/r3/opencv-4.5.3/build")
+
+## System dependencies are found with CMake's conventions
+# find_package(Boost REQUIRED COMPONENTS system)
+find_package(OpenCV)
+# message(FATAL_ERROR "OpenCV: ${OpenCV_LIBS} ")
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 find_package(PCL REQUIRED)
@@ -43,16 +57,18 @@ include_directories(
 )
 
 add_executable(lidar_camera_calib src/lidar_camera_calib.cpp include/lidar_camera_calib.hpp)
-add_executable(lidar_camera_multi_calib src/lidar_camera_multi_calib.cpp include/lidar_camera_calib.hpp)
-add_executable(bag_to_pcd src/bag_to_pcd.cpp)
 target_link_libraries(lidar_camera_calib 
   ${catkin_LIBRARIES} ${OpenCV_LIBS} ${PCL_LIBRARIES} ${CERES_LIBRARIES}
 )
 
+add_executable(lidar_camera_multi_calib src/lidar_camera_multi_calib.cpp include/lidar_camera_calib.hpp)
 target_link_libraries(lidar_camera_multi_calib 
   ${catkin_LIBRARIES} ${OpenCV_LIBS} ${PCL_LIBRARIES} ${CERES_LIBRARIES}
 )
 
+add_executable(bag_to_pcd src/bag_to_pcd.cpp)
 target_link_libraries(bag_to_pcd 
   ${catkin_LIBRARIES}  ${PCL_LIBRARIES}
 )
+
+
