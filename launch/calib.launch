@@ -1,15 +1,16 @@
 <launch>
-  <rosparam command="load" file="$(find livox_camera_calib)/config/calib.yaml" />
+  <!-- <rosparam command="load" file="$(find livox_camera_calib)/config/calib.yaml" /> -->
+  <rosparam command="load" file="$(find livox_camera_calib)/config/multi_calib.yaml" />
   <node 
     pkg="livox_camera_calib"
-    type="lidar_camera_calib"
+    type="lidar_camera_calib_manual"
     name="lidar_camera_calib"
     output="screen"
   />
-  <node 
+  <!-- <node 
     pkg="rviz"
     type="rviz"
-    name="rviz"
+    name="rviz11"
     args="-d $(find livox_camera_calib)/rviz_cfg/calib.rviz"
-  />
+  /> -->
 </launch>

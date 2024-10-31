@@ -71,4 +71,7 @@ target_link_libraries(bag_to_pcd
   ${catkin_LIBRARIES}  ${PCL_LIBRARIES}
 )
 
-
+add_executable(lidar_camera_calib_manual src/lidar_camera_calib_manual.cpp include/lidar_camera_calib.hpp)
+target_link_libraries(lidar_camera_calib_manual 
+  ${catkin_LIBRARIES} ${OpenCV_LIBS} ${PCL_LIBRARIES} ${CERES_LIBRARIES}
+)
